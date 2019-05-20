@@ -115,19 +115,23 @@ let shutDownDevice = (req, res, next) => {
  * @param {*} next
  */
 let getAllActiveDeviceProcesses = (req, res, next) => {
-  let apiUrl = process.env.HOLO_UR_WIFI + '/api/resourcemanager/processes';
-  axios.get(apiUrl)
-    .then(deviceResponse => {
-      let response = {
+  
+  const options = {
+    method: 'GET',
+    uri: process.env.HOLO_UR_WIFI + '/api/resourcemanager/processes';
+  }
+  try {
+    let result = await request(options);
+    let response = {
         code: responseType.OK,
-        data: deviceResponse,
+        data: result,
         message: 'Listed active processes successfully.'
-      };
-      responseHandler.sendData(req, res, response);
-    })
-    .catch(error => {
-      next(error);
-    });
+    };
+    responseHandler.sendData(req, res, response);
+  } catch (e) {
+    next(e);
+  }
+  
 };
 
 
