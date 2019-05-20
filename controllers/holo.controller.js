@@ -1,7 +1,7 @@
 const holoNetworkModel = require('../dao/mongodb/functions');
 const responseHandler = require('../helpers/responseHandler');
 const responseType = require('../helpers/responseType');
-const axios = require('axios');
+const request = require("request-promise-native");
 
 
 /**
@@ -11,19 +11,21 @@ const axios = require('axios');
  * @param {*} next
  */
 let startMRCRecording = (req, res, next) => {
-  let apiUrl = process.env.HOLO_UR_WIFI + '/api/holographic/simulation/recording/start';
-  axios.get(apiUrl)
-    .then(deviceResponse => {
-      let response = {
-        code: responseType.OK,
-        data: [],
-        message: 'Scene recording has been started successfully.'
-      };
-      responseHandler.sendData(req, res, response);
-    })
-    .catch(error => {
-      next(error);
-    });
+  const options = {
+    method: 'GET',
+    uri:process.env.HOLO_UR_WIFI + '/api/holographic/simulation/recording/start';
+  }
+  try {
+    let result = await request(options);
+    let response = {
+      code: responseType.OK,
+      data: result,
+      message: 'Scene recording has been started successfully.'
+    };
+    responseHandler.sendData(req, res, response);
+  } catch (e) {
+    next(e);
+  }
 };
 
 
@@ -34,19 +36,21 @@ let startMRCRecording = (req, res, next) => {
  * @param {*} next
  */
 let stopMRCRecording = (req, res, next) => {
-  let apiUrl = process.env.HOLO_UR_WIFI + '/api/holographic/mrc/video/control/stop';
-  axios.get(apiUrl)
-    .then(deviceResponse => {
-      let response = {
+  const options = {
+    method: 'GET',
+    uri:process.env.HOLO_UR_WIFI + '/api/holographic/mrc/video/control/stop';
+  }
+  try {
+    let result = await request(options);
+    let response = {
         code: responseType.OK,
         data: [],
         message: 'Scene recording has been started successfully.'
-      };
-      responseHandler.sendData(req, res, response);
-    })
-    .catch(error => {
-      next(error);
-    });
+     };
+    responseHandler.sendData(req, res, response);
+  } catch (e) {
+    next(e);
+  }
 };
 
 
@@ -57,19 +61,23 @@ let stopMRCRecording = (req, res, next) => {
  * @param {*} next
  */
 let restartDevice = (req, res, next) => {
-  let apiUrl = process.env.HOLO_UR_WIFI + '/api/control/restart';
-  axios.post(apiUrl, {})
-    .then(deviceResponse => {
-      let response = {
+  const options = {
+    method: 'POST',
+    uri: process.env.HOLO_UR_WIFI + '/api/control/restart';
+    json: {}
+  }
+  try {
+    let result = await request(options);
+    let response = {
         code: responseType.OK,
         data: [],
         message: 'Hololens device has been rebooted successfully.'
       };
-      responseHandler.sendData(req, res, response);
-    })
-    .catch(error => {
-      next(error);
-    });
+    responseHandler.sendData(req, res, response);
+  } catch (e) {
+    next(e);
+  }
+  
 };
 
 
@@ -81,19 +89,22 @@ let restartDevice = (req, res, next) => {
  * @param {*} next
  */
 let shutDownDevice = (req, res, next) => {
-  let apiUrl = process.env.HOLO_UR_WIFI + '/api/control/shutdown';
-  axios.post(apiUrl, {})
-    .then(deviceResponse => {
-      let response = {
+  const options = {
+    method: 'POST',
+    uri: process.env.HOLO_UR_WIFI + '/api/control/shutdown';
+    json: {}
+  }
+  try {
+    let result = await request(options);
+    let response = {
         code: responseType.OK,
         data: [],
         message: 'Hololens device has been shutdown successfully.'
-      };
-      responseHandler.sendData(req, res, response);
-    })
-    .catch(error => {
-      next(error);
-    });
+     };
+    responseHandler.sendData(req, res, response);
+  } catch (e) {
+    next(e);
+  }
 };
 
 
